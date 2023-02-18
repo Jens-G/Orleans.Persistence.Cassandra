@@ -298,6 +298,31 @@ namespace Orleans.Persistence.Cassandra.Storage
                 _jsonSettings.TypeNameHandling = _cassandraStorageOptions.JsonSerialization.TypeNameHandling;
                 _jsonSettings.MetadataPropertyHandling = _cassandraStorageOptions.JsonSerialization.MetadataPropertyHandling;
 
+                // clear and fill again to work around "Unable to cast object ... to type 'Orleans.Runtime.GrainReference'."
+                //    bei Orleans.Serialization.GrainReferenceJsonConverter.WriteJson(JsonWriter writer, Object value, JsonSerializer serializer)
+                //    bei Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeConvertable(JsonWriter writer, JsonConverter converter, Object value, JsonContract contract, JsonContainerContract collectionContract, JsonProperty containerProperty)
+                //    bei Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeValue(JsonWriter writer, Object value, JsonContract valueContract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty)
+                //    bei Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeObject(JsonWriter writer, Object value, JsonObjectContract contract, JsonProperty member, JsonContainerContract collectionContract, JsonProperty containerProperty)
+                //    bei Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.SerializeValue(JsonWriter writer, Object value, JsonContract valueContract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty)
+                //    bei Newtonsoft.Json.Serialization.JsonSerializerInternalWriter.Serialize(JsonWriter jsonWriter, Object value, Type objectType)
+                //    bei Newtonsoft.Json.JsonSerializer.SerializeInternal(JsonWriter jsonWriter, Object value, Type objectType)
+                //    bei Newtonsoft.Json.JsonSerializer.Serialize(JsonWriter jsonWriter, Object value, Type objectType)
+                //    bei Newtonsoft.Json.JsonConvert.SerializeObjectInternal(Object value, Type type, JsonSerializer jsonSerializer)
+                //    bei Newtonsoft.Json.JsonConvert.SerializeObject(Object value, Type type, JsonSerializerSettings settings)
+                //    bei Newtonsoft.Json.JsonConvert.SerializeObject(Object value, JsonSerializerSettings settings)
+                //    bei Orleans.Persistence.Cassandra.Storage.CassandraGrainStorage.< WriteStateAsync > d__15`1.MoveNext() in .\lib\3rdparty\Orleans.Persistence.Cassandra\src\Orleans.Persistence.Cassandra\Storage\CassandraGrainStorage.cs: Zeile99
+                _jsonSettings.Converters.Clear();
+                _jsonSettings.Converters.Add(new IPAddressConverter());
+                _jsonSettings.Converters.Add(new IPEndPointConverter());
+                _jsonSettings.Converters.Add(new GrainIdConverter());
+                _jsonSettings.Converters.Add(new Serialization.ActivationIdConverter());
+                _jsonSettings.Converters.Add(new SiloAddressJsonConverter());
+                _jsonSettings.Converters.Add(new MembershipVersionJsonConverter());
+                _jsonSettings.Converters.Add(new UniqueKeyConverter());
+                //_jsonSettings.Converters.Add(new GrainReferenceJsonConverter(services.GetRequiredService<GrainReferenceActivator>()));
+                _jsonSettings.Converters.Add(new MyGrainReferenceJsonConverter(_services.GetRequiredService<GrainReferenceActivator>()));
+
+
                 if (_cassandraStorageOptions.JsonSerialization.ContractResolver != null)
                 {
                     _jsonSettings.ContractResolver = _cassandraStorageOptions.JsonSerialization.ContractResolver;
