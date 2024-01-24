@@ -10,6 +10,8 @@ using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.Diagnostics;
 
+#pragma warning disable IDE0290  // primary CTOR
+
 namespace Orleans.Serialization
 {
 

@@ -1,5 +1,7 @@
 ﻿using System;
 
+#pragma warning disable IDE0290  // primary CTOR
+
 namespace Orleans.Persistence.Cassandra.Storage
 {
     public sealed class CassandraConcurrencyException : Exception
