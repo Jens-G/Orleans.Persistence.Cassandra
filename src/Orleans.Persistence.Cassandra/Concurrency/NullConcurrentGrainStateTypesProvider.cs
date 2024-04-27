@@ -5,6 +5,6 @@ namespace Orleans.Persistence.Cassandra.Concurrency
 {
     public sealed class NullConcurrentGrainStateTypesProvider : IConcurrentGrainStateTypesProvider
     {
-        public IReadOnlyCollection<Type> GetGrainStateTypes() => Array.Empty<Type>();
+        public IReadOnlyCollection<Type> GetGrainStateTypes() => [];
     }
 }
