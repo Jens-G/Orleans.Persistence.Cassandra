@@ -412,7 +412,7 @@ namespace Orleans.Persistence.Cassandra.Storage
         public static IGrainStorage Create(IServiceProvider services, string name)
         {
             var optionsSnapshot = services.GetRequiredService<IOptionsSnapshot<CassandraStorageOptions>>();
-            var typesProvider = services.GetRequiredServiceByName<IConcurrentGrainStateTypesProvider>(name);
+            var typesProvider = services.GetRequiredKeyedService<IConcurrentGrainStateTypesProvider>(name);
             return ActivatorUtilities.CreateInstance<CassandraGrainStorage>(services, name, optionsSnapshot.Get(name), typesProvider, services);
         }
     }

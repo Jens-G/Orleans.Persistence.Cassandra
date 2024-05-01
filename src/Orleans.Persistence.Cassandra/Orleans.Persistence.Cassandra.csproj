@@ -4,9 +4,9 @@
     <Nullable>warnings</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CassandraCSharpDriver" Version="3.19.4" />
-    <PackageReference Include="Microsoft.Orleans.Core" Version="7.2.3" />
-    <PackageReference Include="Microsoft.Orleans.Runtime" Version="7.2.3" />
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="7.2.3" />
+    <PackageReference Include="CassandraCSharpDriver" Version="3.20.1" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="8.1.0" />
+    <PackageReference Include="Microsoft.Orleans.Runtime" Version="8.1.0" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="8.1.0" />
   </ItemGroup>
 </Project>
