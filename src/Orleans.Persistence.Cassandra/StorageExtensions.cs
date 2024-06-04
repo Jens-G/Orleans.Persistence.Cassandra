@@ -150,14 +150,16 @@ namespace Orleans.Persistence.Cassandra
 
             //services.AddTransient<IConfigurationValidator>(sp => new CassandraStorageOptionsValidator(sp.GetService<IOptionsSnapshot<CassandraStorageOptions>>().Get(name), name));
             services.ConfigureNamedOptionForLogging<CassandraStorageOptions>(name);
-            if (!name.Equals(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME))
-                services.TryAddSingleton(sp => sp.GetRequiredKeyedService<IGrainStorage>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
+            services.TryAddSingleton(sp => sp.GetRequiredKeyedService<IGrainStorage>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
 
-            return services
-                   .AddKeyedSingleton(name, (sp, n) => concurrentGrainStateTypesProvider ?? new NullConcurrentGrainStateTypesProvider())
-                   .AddKeyedSingleton(name, (sp, n) => CassandraGrainStorageFactory.Create(sp,(string)n))
-                   .AddKeyedSingleton(name, (sp, n) => (ILifecycleParticipant<ISiloLifecycle>)sp.GetRequiredKeyedService<IGrainStorage>(n))
-                   ;
+            services.AddKeyedSingleton(name, (sp, n) => concurrentGrainStateTypesProvider ?? new NullConcurrentGrainStateTypesProvider());
+            services.AddKeyedSingleton(name, (sp, n) => CassandraGrainStorageFactory.Create(sp, (string)n));
+            services.AddKeyedSingleton(name, (sp, n) => (ILifecycleParticipant<ISiloLifecycle>)sp.GetRequiredKeyedService<IGrainStorage>(n));
+
+            // see https://github.com/dotnet/docs/blob/main/docs/orleans/host/silo-lifecycle.md
+            services.AddTransient((sp) => (ILifecycleParticipant<ISiloLifecycle>)sp.GetRequiredKeyedService<IGrainStorage>(name));
+
+            return services;
         }
     }
 }
