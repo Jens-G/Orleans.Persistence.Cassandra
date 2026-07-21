@@ -25,6 +25,9 @@ using Orleans.Serialization;
 using Orleans.Serialization.Buffers;
 using Orleans.Storage;
 
+#pragma warning disable IDE0306  // init collection
+#pragma warning disable IDE0028  // init collection
+
 namespace Orleans.Persistence.Cassandra.Storage
 {
     internal sealed class CassandraGrainStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
@@ -71,12 +74,12 @@ namespace Orleans.Persistence.Cassandra.Storage
             _services = services;
             _concurrentStateTypes = new HashSet<Type>(concurrentGrainStateTypesProvider.GetGrainStateTypes());
 
-            Diagnostics.CassandraPerformanceCountersEnabled = _cassandraStorageOptions.Diagnostics.PerformanceCountersEnabled;
-            Diagnostics.CassandraStackTraceIncluded = _cassandraStorageOptions.Diagnostics.StackTraceIncluded;
+            global::Cassandra.Diagnostics.CassandraPerformanceCountersEnabled = _cassandraStorageOptions.Diagnostics.PerformanceCountersEnabled;
+            global::Cassandra.Diagnostics.CassandraStackTraceIncluded = _cassandraStorageOptions.Diagnostics.StackTraceIncluded;
 
             if (loggerProvider != null)
             {
-                Diagnostics.AddLoggerProvider(loggerProvider);
+                global::Cassandra.Diagnostics.AddLoggerProvider(loggerProvider);
             }
         }
 
