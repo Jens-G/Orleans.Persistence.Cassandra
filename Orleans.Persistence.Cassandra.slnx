@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/build/">
+    <File Path="appveyor.yml" />
+    <File Path="build/build.cmd" />
+    <File Path="build/build.ps1" />
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="src/Orleans.Persistence.Cassandra/Orleans.Persistence.Cassandra.csproj" />
+</Solution>
