@@ -85,7 +85,7 @@ namespace Orleans.Persistence.Cassandra.Storage
 
         public async Task ReadStateAsync<T>(string grainType, GrainId grainReference, IGrainState<T> grainState)
         {
-            var isConcurrentState = _concurrentStateTypes.Contains(grainState.State.GetType());
+            var isConcurrentState = _concurrentStateTypes.Contains(grainState.State?.GetType());
             var (_, cassandraState) = await GetCassandraGrainState(grainType, grainReference, isConcurrentState);
             if (cassandraState != null)
             {
@@ -96,7 +96,7 @@ namespace Orleans.Persistence.Cassandra.Storage
 
         public async Task WriteStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
         {
-            var isConcurrentState = _concurrentStateTypes.Contains(grainState.State.GetType());
+            var isConcurrentState = _concurrentStateTypes.Contains(grainState.State?.GetType());
             var (id, cassandraState) = await GetCassandraGrainState(grainType, grainId, isConcurrentState);
             try
             {
@@ -178,7 +178,7 @@ namespace Orleans.Persistence.Cassandra.Storage
 
         public async Task ClearStateAsync<T>(string grainType, GrainId grainReference, IGrainState<T> grainState)
         {
-            var isConcurrentState = _concurrentStateTypes.Contains(grainState.State.GetType());
+            var isConcurrentState = _concurrentStateTypes.Contains(grainState.State?.GetType());
             var (id, cassandraState) = await GetCassandraGrainState(grainType, grainReference, isConcurrentState);
             try
             {
