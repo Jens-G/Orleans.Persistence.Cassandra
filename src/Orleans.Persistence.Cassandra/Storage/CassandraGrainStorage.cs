@@ -348,12 +348,25 @@ namespace Orleans.Persistence.Cassandra.Storage
                 */
 
                  var cassandraOptions = _cassandraStorageOptions;
-                _cluster = Cluster.Builder()
+                var builder = Cluster.Builder()
                                   .AddContactPoints(cassandraOptions.ContactPoints.Split(','))
                                   //.WithPort(9142)
-                                  //.WithAuthProvider(new PlainTextAuthProvider("user", "password"))
                                   //.WithSSL(new SSLOptions().SetCertificateCollection(certCollection))
-                                  .Build();
+                                  ;
+
+                // the login only with both values, without them nothing changes
+                var hasUsername = !string.IsNullOrEmpty(cassandraOptions.Username);
+                var hasPassword = !string.IsNullOrEmpty(cassandraOptions.Password);
+                if (hasUsername && hasPassword)
+                {
+                    builder = builder.WithCredentials(cassandraOptions.Username, cassandraOptions.Password);
+                }
+                else if (hasUsername || hasPassword)
+                {
+                    _logger.LogWarning("Cassandra grain storage for service {serviceId}: {missing} is missing, connecting without credentials.", _serviceId, hasUsername ? nameof(cassandraOptions.Password) : nameof(cassandraOptions.Username));
+                }
+
+                _cluster = builder.Build();
 
                 // when there are less nodes, the driver throws Cassandra.UnavailableExeption with Quorum
                 if (cassandraOptions.ReplicationFactor < 3)

@@ -18,6 +18,14 @@ namespace Orleans.Persistence.Cassandra.Options
         public bool DeleteStateOnClear { get; set; } = false;
 
         public string ContactPoints { get; set; }
+
+        /// <summary>
+        /// The login for a Cassandra with PasswordAuthenticator. The storage logs in only when both are set; without them it
+        /// connects without credentials, which a Cassandra with AllowAllAuthenticator (the default) accepts.
+        /// </summary>
+        public string Username { get; set; }
+        public string Password { get; set; }
+
         public string Keyspace { get; set; } = "orleans";
         public string TableName { get; set; } = "grain_state";
         public int ReplicationFactor { get; set; } = 3;
